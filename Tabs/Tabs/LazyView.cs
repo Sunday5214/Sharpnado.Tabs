@@ -13,6 +13,7 @@ namespace Sharpnado.Tabs
         bool IsLoaded { get; }
 
         void LoadView();
+        void LoadView(object parentContext);
     }
 
     public abstract class ALazyView : ContentView, ILazyView, IDisposable, IAnimatableReveal
@@ -63,6 +64,8 @@ namespace Sharpnado.Tabs
 
         public abstract void LoadView();
 
+        public abstract void LoadView(object parentContext);
+
         public void Dispose()
         {
             if (Content is IDisposable disposable)
@@ -110,6 +113,15 @@ namespace Sharpnado.Tabs
         where TView : View, new()
     {
         public override void LoadView()
+        {
+            IsLoaded = true;
+
+            View view = new TView { BindingContext = BindingContext };
+
+            Content = view;
+        }
+
+        public override void LoadView(object parentContext)
         {
             IsLoaded = true;
 

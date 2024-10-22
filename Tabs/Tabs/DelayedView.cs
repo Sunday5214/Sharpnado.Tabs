@@ -23,6 +23,23 @@ public class DelayedView<TView> : LazyView<TView>
                     Content = view;
                 });
     }
+
+    public override void LoadView(object parentContext)
+    {
+        TaskMonitor.Create(
+           async () =>
+           {
+               View? view = new TView
+               {
+                   BindingContext = parentContext,
+               };
+
+               await Task.Delay(DelayInMilliseconds);
+
+               IsLoaded = true;
+               Content = view;
+           });
+    }
 }
 
 public class DelayedView : ALazyView
@@ -60,5 +77,26 @@ public class DelayedView : ALazyView
                     IsLoaded = true;
                     Content = View;
                 });
+    }
+
+    public override void LoadView(object parentContext)
+    {
+        if (IsLoaded)
+        {
+            return;
+        }
+
+        TaskMonitor.Create(
+            async () =>
+            {
+                await Task.Delay(DelayInMilliseconds);
+                if (IsLoaded)
+                {
+                    return;
+                }
+
+                IsLoaded = true;
+                Content = View;
+            });
     }
 }

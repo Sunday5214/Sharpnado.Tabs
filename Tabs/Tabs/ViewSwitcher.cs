@@ -192,7 +192,7 @@ namespace Sharpnado.Tabs
             {
                 if (!lazyView.IsLoaded)
                 {
-                    lazyView.LoadView();
+                    lazyView.LoadView(BindingContext);
                 }
             }
 
